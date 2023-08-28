@@ -113,13 +113,13 @@ jobs:
       - run:
           name: Extract the IPs of the management instances for Ansible
           command: |
-            echo [management] > ~/inventory.txt
+            echo [management] > ~/project/ansible/inventory.txt
             aws ec2 describe-instances \
               --region "${AWS_DEFAULT_REGION}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
-              --output text >> ~/inventory.txt
-            cat ~/inventory.txt
+              --output text >> ~/project/ansible/inventory.txt
+            cat ~/project/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -133,7 +133,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	da:3d:65:32:da:87:dd:08:5f:80:bf:12:29:b8:ca:71"
+            - "	d9:ba:30:e7:a4:6e:c3:b9:3f:e3:74:b9:8e:23:7b:5d"
       - attach_workspace:
           at: ~/
       - run:
@@ -145,12 +145,12 @@ jobs:
           command: |
             if grep -q "No changes to deploy" ~/checkIfDeployed.txt
               then
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 echo "Our management instances are already configured."
               else
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 cd ansible
-                ansible-playbook -i ~/inventory.txt configure-server.yml
+                ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
               fi
 
   configure-cluster:
@@ -160,7 +160,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	da:3d:65:32:da:87:dd:08:5f:80:bf:12:29:b8:ca:71"
+            - "	d9:ba:30:e7:a4:6e:c3:b9:3f:e3:74:b9:8e:23:7b:5d"
       - attach_workspace:
           at: ~/
       - run:
@@ -172,31 +172,31 @@ jobs:
           command: |
             if grep -q "No changes to deploy" ~/checkIfDeployed.txt
               then
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 echo "Our management instances are already configured."
               else
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 cd ansible
-                ansible-playbook -i ~/inventory.txt configure-cluster.yml
+                ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-cluster.yml
               fi
       - run:
           name: Wait for LoadBalancer's domain to become reachable
           command: |
             if grep -q "No changes to deploy" ~/checkIfDeployed.txt
               then
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 echo "Our management instances are already configured."
               else
-                cat ~/inventory.txt
+                cat ~/project/ansible/inventory.txt
                 echo "Wait 60 seconds..."
                 sleep 60
               fi
       - run:
           name: Display the LoadBalancer's DNS name
           command: |
-            cat ~/inventory.txt
+            cat ~/project/ansible/inventory.txt
             cd ansible
-            ansible-playbook -i ~/inventory.txt save-elb-dns.yml
+            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/save-elb-dns.yml
             cat ~/elb_dns.txt
       - persist_to_workspace:
           root: ~/
@@ -210,7 +210,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	da:3d:65:32:da:87:dd:08:5f:80:bf:12:29:b8:ca:71"
+            - "	d9:ba:30:e7:a4:6e:c3:b9:3f:e3:74:b9:8e:23:7b:5d"
       - attach_workspace:
           at: ~/
       - run:
@@ -220,9 +220,9 @@ jobs:
       - run:
           name: Deploy newest Docker Image
           command: |
-            cat ~/inventory.txt
+            cat ~/project/ansible/inventory.txt
             cd ansible
-            ansible-playbook -i ~/inventory.txt deploy-app.yml
+            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/deploy-app.yml
           no_output_timeout: 2m
 
 workflows:
