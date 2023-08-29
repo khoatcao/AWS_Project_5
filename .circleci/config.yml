@@ -55,21 +55,16 @@ jobs:
   upload-docker:
     docker:
       - image: circleci/golang:1.15
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
       - setup_remote_docker:
           version: 19.03.13
-
       - run:
           name: Build docker container
           command: |
             docker build --tag=$DOCKER_IMAGE_NAME .
             docker image ls
-
       - run:
           name: Upload Docker to Dockerhub
           command: |
@@ -125,8 +120,8 @@ jobs:
               --stack-name "${ENVIRONMENT_NAME}-eks-management" \
               --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/management-parameters.json \
-              --output text >> ~/checkIfDeployed.txt
-            cat ~/checkIfDeployed.txt
+              --output text >> ~/project/ansible/checkIfDeployed.txt
+            cat ~/project/ansible/checkIfDeployed.txt
       - run:
           name: Extract the IPs of the management instances for Ansible
           command: |
@@ -147,37 +142,33 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
+      - install-kubectl
       - add_ssh_keys:
           fingerprints:
             - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
       - attach_workspace:
           at: ~/
       - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible
-      - run:
           name: Configure server
-          command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/project/ansible/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/project/ansible/inventory.txt
-                cd ansible
-                ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
-              fi
+          command:
+            cat ~/project/ansible/inventory.txt
+            cd ansible
+            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
       - destroy-environment
 
   configure-cluster:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
+      - install-kubectl
       - add_ssh_keys:
           fingerprints:
             - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
@@ -189,35 +180,23 @@ jobs:
             apk add --update ansible
       - run:
           name: Configure server
-          command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/project/ansible/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/project/ansible/inventory.txt
-                cd ansible
-                ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-cluster.yml
-              fi
+          command: |        
+            cat ~/project/ansible/inventory.txt
+            cd ansible
+            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-cluster.yml
       - run:
           name: Wait for LoadBalancer's domain to become reachable
           command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/project/ansible/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/project/ansible/inventory.txt
-                echo "Wait 60 seconds..."
-                sleep 60
-              fi
+            cat ~/project/ansible/inventory.txt
+            echo "Wait 60 seconds..."
+            sleep 60
       - run:
           name: Display the LoadBalancer's DNS name
           command: |
             cat ~/project/ansible/inventory.txt
             cd ansible
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/save-elb-dns.yml
-            cat ~/elb_dns.txt
+            cat ~/project/ansible/elb_dns.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -226,9 +205,11 @@ jobs:
 
   deploy-docker:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
       - add_ssh_keys:
           fingerprints:
             - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
