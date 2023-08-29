@@ -161,10 +161,10 @@ jobs:
           at: ~/
       - run:
           name: Configure server
-          command:
-            cat project/ansible/inventory.txt
+          command: |
+            cat ~/project/ansible/inventory.txt
             cd ansible
-            ansible-playbook -i project/ansible/inventory.txt configure-server.yml
+            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
 
   configure-cluster:
     docker:
