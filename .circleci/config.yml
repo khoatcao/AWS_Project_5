@@ -158,8 +158,8 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - inventory.txt
-            - checkIfDeployed.txt
+            - project/ansible/inventory.txt
+            - project/ansible/checkIfDeployed.txt
             
 
   configure-infrastructure:
@@ -222,7 +222,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - elb_dns.txt
+            - project/ansible/elb_dns.txt
       - destroy-environment
 
   deploy-docker:
