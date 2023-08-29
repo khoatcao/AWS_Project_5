@@ -161,7 +161,6 @@ jobs:
             - inventory.txt
             - checkIfDeployed.txt
             
-      - destroy-environment
 
   configure-infrastructure:
     docker:
