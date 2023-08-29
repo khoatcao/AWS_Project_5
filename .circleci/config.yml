@@ -32,22 +32,6 @@ commands:
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
             kubectl version --client
             export PATH=$PATH:/usr/local/bin/kubectl
-            
-  destroy-environment:
-    description: Destroy Capstone EKS Network & Cluster stacks.
-    steps:
-      - run:
-          name: Destroy Capstone EKS Network & Cluster
-          when: on_fail
-          command: |
-            echo "Deleting Capstone EKS Cluster"
-            aws cloudformation delete-stack --stack-name capstone-eks-cluster --output text
-      - run:
-          name: Destroy Cloud Formation Capstine EKS Network
-          when: on_fail
-          command: |
-            echo "Deleting Capstone EKS Network"
-            aws cloudformation delete-stack --stack-name capstone-eks-network --output text
 
 jobs:
   test-build:
@@ -178,10 +162,9 @@ jobs:
       - run:
           name: Configure server
           command:
-            cat ~/project/ansible/inventory.txt
+            cat project/ansible/inventory.txt
             cd ansible
-            ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
-      - destroy-environment
+            ansible-playbook -i project/ansible/inventory.txt configure-server.yml
 
   configure-cluster:
     docker:
@@ -223,7 +206,6 @@ jobs:
           root: ~/
           paths:
             - project/ansible/elb_dns.txt
-      - destroy-environment
 
   deploy-docker:
     docker:
@@ -248,7 +230,6 @@ jobs:
             cd ansible
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/deploy-app.yml
           no_output_timeout: 2m
-      - destroy-environment
 
 workflows:
   default:
