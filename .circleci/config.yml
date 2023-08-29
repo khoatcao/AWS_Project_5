@@ -1,6 +1,7 @@
 version: 2.1
 
-destroy-environment:
+commands:
+  destroy-environment:
     description: Destroy Capstone EKS Network & Cluster stacks.
     steps:
       - run:
