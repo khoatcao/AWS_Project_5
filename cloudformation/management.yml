@@ -1,5 +1,5 @@
 Description: >
-  Felix Lutze / Capstone Project
+  qdunggs95 / Capstone Project
   Creates two individual hosts to manage the EKS-Cluster
 
 Parameters:
@@ -31,12 +31,11 @@ Resources:
   managementHost1:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t3.medium
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: !Ref SSHKeyName
       ImageId: !Ref amiImageId
-      SubnetId: !Sub ${EnvironmentName}-PUB1-SN
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName}-management1
@@ -46,12 +45,11 @@ Resources:
   managementHost2:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t3.medium
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: !Ref SSHKeyName
       ImageId: !Ref amiImageId
-      SubnetId: !Sub ${EnvironmentName}-PUB2-SN
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName}-management2
