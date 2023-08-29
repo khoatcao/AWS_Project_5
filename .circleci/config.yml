@@ -171,6 +171,7 @@ jobs:
                 cd ansible
                 ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
               fi
+      - destroy-environment
 
   configure-cluster:
     docker:
@@ -221,6 +222,7 @@ jobs:
           root: ~/
           paths:
             - elb_dns.txt
+      - destroy-environment
 
   deploy-docker:
     docker:
@@ -243,6 +245,7 @@ jobs:
             cd ansible
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/deploy-app.yml
           no_output_timeout: 2m
+      - destroy-environment
 
 workflows:
   default:
