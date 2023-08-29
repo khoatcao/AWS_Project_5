@@ -162,7 +162,6 @@ jobs:
           name: Configure server
           command: |
             cat ~/project/ansible/inventory.txt
-            cd ansible
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
 
   configure-cluster:
