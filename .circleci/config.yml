@@ -1,5 +1,21 @@
 version: 2.1
 
+destroy-environment:
+    description: Destroy Capstone EKS Network & Cluster stacks.
+    steps:
+      - run:
+          name: Destroy Capstone EKS Network & Cluster
+          when: on_fail
+          command: |
+            echo "Deleting Capstone EKS Cluster"
+            aws cloudformation delete-stack --stack-name capstone-eks-cluster --output text
+      - run:
+          name: Destroy Cloud Formation Capstine EKS Network
+          when: on_fail
+          command: |
+            echo "Deleting Capstone EKS Network"
+            aws cloudformation delete-stack --stack-name capstone-eks-network --output text
+
 jobs:
   test-build:
     docker:
@@ -88,7 +104,7 @@ jobs:
               --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/cluster-parameters.json \
               --capabilities CAPABILITY_NAMED_IAM
-          no_output_timeout: 15m
+          no_output_timeout: 5m
       - run:
           name: Ensure Nodegroup exists
           command: |
@@ -125,6 +141,8 @@ jobs:
           paths:
             - inventory.txt
             - checkIfDeployed.txt
+            
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -133,7 +151,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	e1:96:5e:6e:42:1f:b1:52:af:46:f0:c7:6c:0e:59:e6"
+            - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
       - attach_workspace:
           at: ~/
       - run:
@@ -160,7 +178,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	e1:96:5e:6e:42:1f:b1:52:af:46:f0:c7:6c:0e:59:e6"
+            - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
       - attach_workspace:
           at: ~/
       - run:
@@ -210,7 +228,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "	e1:96:5e:6e:42:1f:b1:52:af:46:f0:c7:6c:0e:59:e6"
+            - "	e1:24:14:87:b9:50:66:9f:a0:89:e2:5f:78:c4:dd:11"
       - attach_workspace:
           at: ~/
       - run:
