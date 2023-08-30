@@ -161,6 +161,12 @@ jobs:
       - run:
           name: Configure server
           command: |
+            echo [management] > ~/project/ansible/inventory.txt
+            aws ec2 describe-instances \
+              --region "${AWS_DEFAULT_REGION}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
+              --output text >> ~/project/ansible/inventory.txt
             cat ~/project/ansible/inventory.txt
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-server.yml
 
