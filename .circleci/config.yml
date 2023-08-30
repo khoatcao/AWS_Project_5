@@ -155,7 +155,7 @@ jobs:
       - install_ansible
       - install-kubectl
       - add_ssh_keys:
-          fingerprints: [e0:d1:16:d1:a5:25:17:36:de:e9:26:54:0b:b5:cf:3a]
+          fingerprints: [39:97:90:a3:71:1e:3b:e8:07:82:54:40:c9:8f:d2:0c]
       - attach_workspace:
           at: ~/
       - run:
@@ -179,7 +179,7 @@ jobs:
       - install_ansible
       - install-kubectl
       - add_ssh_keys:
-          fingerprints: [e0:d1:16:d1:a5:25:17:36:de:e9:26:54:0b:b5:cf:3a]
+          fingerprints: [39:97:90:a3:71:1e:3b:e8:07:82:54:40:c9:8f:d2:0c]
       - attach_workspace:
           at: ~/
       - run:
@@ -218,7 +218,7 @@ jobs:
       - install_awscli
       - install_ansible
       - add_ssh_keys:
-          fingerprints: [e0:d1:16:d1:a5:25:17:36:de:e9:26:54:0b:b5:cf:3a]
+          fingerprints: [39:97:90:a3:71:1e:3b:e8:07:82:54:40:c9:8f:d2:0c]
       - attach_workspace:
           at: ~/
       - run:
