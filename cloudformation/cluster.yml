@@ -50,17 +50,6 @@ Resources:
             - ","
             - Fn::ImportValue:
                 Fn::Sub: ${EnvironmentName}-PUB-NETS
-  EKSClusterHost:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: t2.micro
-      KeyName: dungnq21Project5
-      ImageId: ami-053b0d53c279acc90
-      Tags:
-        - Key: Name
-          Value: !Sub ${EnvironmentName}-EKS-Cluster
-        - Key: Project
-          Value: !Ref EnvironmentName
 Outputs:
   EksId:
     Description: EKS id
