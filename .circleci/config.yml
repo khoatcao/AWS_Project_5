@@ -151,6 +151,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
       - install_ansible
       - install-kubectl
       - add_ssh_keys:
