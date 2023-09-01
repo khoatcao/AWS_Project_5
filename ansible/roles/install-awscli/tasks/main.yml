@@ -1,6 +1,6 @@
 ---
 - name: "Unistall old aws cli"
-  shell: sudo yum remove awscli
+  shell: yum remove awscli
   args:
     chdir: $HOME
     
