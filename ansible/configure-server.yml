@@ -30,6 +30,7 @@
     - setup:
 
   roles:
+    - install-awscli
     - install-kubectl
 
 - name: "Authenticate AWS CLI with AWS"
