@@ -183,7 +183,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Configure server
+          name: Configure server test
           command: |        
             cat ~/project/ansible/inventory.txt
             cd ansible
