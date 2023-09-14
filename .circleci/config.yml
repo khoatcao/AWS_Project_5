@@ -189,7 +189,7 @@ jobs:
             cd ansible
             ansible-playbook -i ~/project/ansible/inventory.txt ~/project/ansible/configure-cluster.yml
       - run:
-          name: Wait for LoadBalancer's domain to become reachable
+          name: Wait for LoadBalancer's domain to become reachable test
           command: |
             cat ~/project/ansible/inventory.txt
             echo "Wait 60 seconds..."
