@@ -1,5 +1,5 @@
 Description: >
-  qdunggs95 / Capstone Project
+  KHoaCT / Capstone Project
   Creates the nodegroup for the Amazon EKS Cluster
 Parameters:
   EnvironmentName:

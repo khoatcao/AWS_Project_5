@@ -1,6 +1,6 @@
 ---
 Description: >
-  qdunggs95 / Capstone Project
+  KhoaCT / Capstone Project
   Creates a VPC with public subnets for EKS.
 
 Parameters:
