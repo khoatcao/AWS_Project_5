@@ -133,12 +133,23 @@ jobs:
           name: Extract the IPs of the management instances for Ansible
           command: |
             echo [management] > ~/project/ansible/inventory.txt
-            aws ec2 describe-instances \
-              --region "${AWS_DEFAULT_REGION}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
-              --output text >> ~/project/ansible/inventory.txt
+            ready=false
+            while [[ $ready == "false" ]]; do
+              instances=$(aws ec2 describe-instances \
+                --region "${AWS_DEFAULT_REGION}" \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
+                --output text)
+              if [[ -n $instances ]]; then
+                echo "$instances" >> ~/project/ansible/inventory.txt
+                ready=true
+              else
+                echo "Instances not ready yet. Waiting..."
+                sleep 30  # Adjust the sleep interval as needed
+              fi
+            done
             cat ~/project/ansible/inventory.txt
+
       - persist_to_workspace:
           root: ~/
           paths:
