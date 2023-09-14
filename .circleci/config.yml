@@ -68,7 +68,7 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
       - run:
-          name: Build docker container
+          name: Build docker container TEST
           command: |
             docker build --tag=$DOCKER_IMAGE_NAME .
             docker image ls
